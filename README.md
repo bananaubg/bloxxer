@@ -3,5 +3,5 @@
 HOW TO START
 
 ```bash
-`npm install`
-`node server.js`
+npm install
+node server.js
