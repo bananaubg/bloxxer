@@ -1,47 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Brainrot Server Finder</title>
-    <style>
-        body { font-family: Arial; background: #1f1f1f; color: white; padding: 20px; }
-        input, button { padding: 10px; margin: 10px 0; width: 100%; }
-        #result { margin-top: 20px; }
-    </style>
+    <title>Player Finder</title>
 </head>
-<body>
-    <h2>Find What Server a Player is In</h2>
+<body style="background:#1e1e1e;color:white;font-family:Arial;padding:20px;">
+    <h2>Find a Roblox Player's Server</h2>
 
-    <input id="username" placeholder="Enter Username">
-    <input id="placeId" placeholder="Enter PlaceId">
+    <input id="username" placeholder="Enter username" style="width:100%;padding:10px;">
+    <button onclick="findPlayer()" style="padding:10px;margin-top:10px;">Search</button>
 
-    <button onclick="scan()">Find Server</button>
-
-    <div id="result"></div>
+    <div id="result" style="margin-top:20px;"></div>
 
 <script>
-async function scan() {
+async function findPlayer() {
     const user = document.getElementById("username").value;
-    const placeId = document.getElementById("placeId").value;
-
     document.getElementById("result").innerHTML = "Scanning...";
 
-    const res = await fetch(`/api/scanUser?username=${user}&placeId=${placeId}`);
+    const res = await fetch(`/api/find?username=${user}`);
     const data = await res.json();
 
     if (!data.found) {
-        document.getElementById("result").innerHTML = "User not found in any **public** servers.";
+        document.getElementById("result").innerHTML = "Player not found in any recent public servers.";
         return;
     }
 
     document.getElementById("result").innerHTML = `
-        <h3>User Found!</h3>
-        <p>Server ID: ${data.serverId}</p>
-        <a href="https://www.roblox.com/games/start?placeId=${placeId}&serverId=${data.serverId}" target="_blank">
-            Click to Join Server
-        </a>
+        <h3>Player Found!</h3>
+        <p><b>Game:</b> ${data.gameName}</p>
+        <p><b>Server ID:</b> ${data.serverId}</p>
+        <a href="${data.joinLink}" target="_blank">Join Their Server</a>
     `;
 }
 </script>
-
 </body>
 </html>
